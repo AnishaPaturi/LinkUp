@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LinkUp Dating App</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+  />
+  <style>
+    :root {
+      --primary: #ff6b6b;
+      --primary-light: #ff9aa2;
+      --secondary: #6c63ff;
+      --dark: #333;
+      --light-bg: #f8f9fa;
+      --white: #fff;
+    }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--dark);
+      padding-top: 70px;
+    }
+    .btn-primary {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+    .btn-primary:hover {
+      background-color: var(--primary-light);
+      border-color: var(--primary-light);
+    }
+    .navbar-brand {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .navbar-brand span {
+      font-weight: 300;
+      color: var(--dark);
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+    .profile-card {
+      position: relative;
+      height: 400px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      color: white;
+    }
+    .profile-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      padding: 20px;
+      border-radius: 0 0 15px 15px;
+    }
+    .compatibility-badge {
+      background-color: var(--secondary);
+      color: white;
+      border-radius: 20px;
+      padding: 5px 15px;
+      font-size: 14px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+    .interest-tag {
+      display: inline-block;
+      background-color: #f1f1f1;
+      padding: 5px 15px;
+      border-radius: 20px;
+      margin: 5px 5px 0 0;
+      font-size: 14px;
+      color: var(--dark);
+    }
+    .swipe-button {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      user-select: none;
+      border: none;
+    }
+    .like-btn {
+      background-color: var(--primary);
+      color: white;
+    }
+    .pass-btn {
+      background-color: var(--white);
+      color: var(--dark);
+      border: 1px solid #ccc;
+    }
+    .super-like-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+    .nav-link.active {
+      color: var(--primary) !important;
+      font-weight: 600;
+    }
+    html, body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    body > nav,
+    body > .section {
+        flex: 1 0 auto; /* Content grows */
+    }
+    footer {
+        flex-shrink: 0; /* Footer stays at bottom */
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+    <div class="container">
+      <a href="#" class="navbar-brand" id="nav-logo">
+        Link<span>Up</span>
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto" id="nav-links">
+          <li class="nav-item">
+            <a href="#" class="nav-link active" data-screen="onboarding">Onboarding</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-screen="home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-screen="profile">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-screen="explore">Explore</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-screen="settings">Settings</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Onboarding -->
+  <section id="onboarding" class="section active container py-5">
+    <h2 class="text-center mb-4">Welcome to LinkUp</h2>
+    <p class="text-center mb-5 fst-italic">Find your perfect match, one heartbeat at a time.</p>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <!-- Welcome -->
+      <div class="col">
+        <div class="card h-100 text-center p-4">
+          <img
+            src="logo.png"
+            alt="LinkUp Logo"
+            class="img-fluid rounded mb-4 mx-auto"
+            style="max-width: 200px"
+          />
+          <button class="btn btn-primary w-100 mb-2" id="login-btn">Log In</button>
+          <button class="btn btn-outline-primary w-100" id="show-signup-btn">Sign Up</button>
+        </div>
+      </div>
+      <!-- Sign Up -->
+      <div class="col" id="signup-col" style="display:none;">
+        <div class="card h-100 p-4">
+          <h4 class="mb-4">Create Account</h4>
+          <form id="signup-form">
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" id="name" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" id="password" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" id="confirmPassword" class="form-control" required />
+            </div>
+            <div class="form-check mb-4">
+              <input type="checkbox" id="terms" class="form-check-input" required />
+              <label for="terms" class="form-check-label">
+                By signing up, you agree to our Terms & Privacy Policy.
+              </label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+          </form>
+        </div>
+      </div>
+      <!-- Preferences -->
+      <div class="col" id="preferences-col" style="display:none;">
+        <div class="card h-100 p-4">
+          <h4 class="mb-4">Your Preferences</h4>
+          <p class="mb-4 fst-italic">Help us find the best matches for you.</p>
+          <form id="preferences-form">
+            <div class="mb-3">
+              <label class="form-label d-block mb-2">I'm interested in</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="interestedIn" id="men" value="men" />
+                <label class="form-check-label" for="men">Men</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="interestedIn" id="women" value="women" />
+                <label class="form-check-label" for="women">Women</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="interestedIn" id="everyone" value="everyone" checked />
+                <label class="form-check-label" for="everyone">Everyone</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="ageRange" class="form-label">Age Range: <span id="ageValue">18-30</span></label>
+              <input type="range" class="form-range" min="18" max="60" id="ageRange" value="30" />
+            </div>
+            <div class="mb-3">
+              <label for="distance" class="form-label">Distance: <span id="distanceValue">10</span> miles</label>
+              <input type="range" class="form-range" min="1" max="100" id="distance" value="10" />
+            </div>
+            <div class="mb-4">
+              <label class="form-label d-block mb-2">Interests (select up to 5)</label>
+              <div class="d-flex flex-wrap gap-2">
+                <div class="form-check">
+                  <input class="form-check-input interest-checkbox" type="checkbox" id="music" value="Music" />
+                  <label class="form-check-label" for="music">Music</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input interest-checkbox" type="checkbox" id="sports" value="Sports" />
+                  <label class="form-check-label" for="sports">Sports</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input interest-checkbox" type="checkbox" id="travel" value="Travel" />
+                  <label class="form-check-label" for="travel">Travel</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input interest-checkbox" type="checkbox" id="food" value="Food" />
+                  <label class="form-check-label" for="food">Food</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input interest-checkbox" type="checkbox" id="art" value="Art" />
+                  <label class="form-check-label" for="art">Art</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input interest-checkbox" type="checkbox" id="movies" value="Movies" />
+                  <label class="form-check-label" for="movies">Movies</label>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Save Preferences</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Home Feed -->
+  <section id="home" class="section container py-5">
+    <h2 class="text-center mb-4">Home Feed - Discover</h2>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div
+          class="profile-card mb-4"
+          style="background-image: url('Alex.png')"
+        >
+          <div class="profile-overlay">
+            <h3>Alex, 28</h3>
+            <p>Coffee lover | Avid hiker | Dog dad</p>
+            <p><i class="bi bi-geo-alt"></i> 5 miles away</p>
+            <span class="compatibility-badge">90% Match</span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-around mb-5">
+          <button class="pass-btn swipe-button" id="pass-btn" title="Pass">
+            <i class="bi bi-x-lg"></i>
+          </button>
+          <button class="super-like-btn swipe-button" id="superlike-btn" title="Super Like">
+            <i class="bi bi-star-fill"></i>
+          </button>
+          <button class="like-btn swipe-button" id="like-btn" title="Like">
+            <i class="bi bi-heart-fill"></i>
+          </button>
+        </div>
+        <h4 class="mb-3">Your Matches</h4>
+        <div class="row">
+          <div class="col-4 mb-3">
+            <div class="card">
+              <img
+                src="Sarah.png"
+                alt="Profile of Sarah"
+                class="card-img-top"
+              />
+              <div class="card-body text-center p-2">
+                <h6 class="card-title mb-0">Sarah, 26</h6>
+                <small class="text-muted">3 miles away</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-4 mb-3">
+            <div class="card">
+              <img
+                src="Mike.png"
+                alt="Profile of Mike"
+                class="card-img-top"
+              />
+              <div class="card-body text-center p-2">
+                <h6 class="card-title mb-0">Mike, 31</h6>
+                <small class="text-muted">7 miles away</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-4 mb-3">
+            <div class="card">
+              <img
+                src="Jen.png"
+                alt="Profile of Jen"
+                class="card-img-top"
+              />
+              <div class="card-body text-center p-2">
+                <h6 class="card-title mb-0">Jen, 29</h6>
+                <small class="text-muted">2 miles away</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Profile -->
+  <section id="profile" class="section container py-5">
+    <h2 class="text-center mb-4">Profile View</h2>
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div id="profileCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+          <div class="carousel-inner rounded">
+            <div class="carousel-item active">
+              <img
+                src="Alex.png"
+                class="d-block w-100"
+                alt="Alex hiking on a mountain trail"
+              />
+            </div>
+            <div class="carousel-item">
+              <img
+                src="AlexDog.png"
+                class="d-block w-100"
+                alt="Alex with his golden retriever"
+              />
+            </div>
+            <div class="carousel-item">
+              <img
+                src="Alex.png"
+                class="d-block w-100"
+                alt="Alex enjoying coffee at a café"
+              />
+            </div>
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#profileCarousel"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#profileCarousel"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        <div class="card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h3 class="mb-0">Alex, 28</h3>
+              <p class="text-muted mb-0"><i class="bi bi-geo-alt"></i> 5 miles away</p>
+            </div>
+            <span class="compatibility-badge">90% Match</span>
+          </div>
+          <p>
+            Hi! I'm Alex — a coffee enthusiast who loves hiking and spending time with my golden retriever, Max.
+            Looking for someone to share adventures and good conversations with.
+            I work as a graphic designer and enjoy photography on the weekends.
+          </p>
+          <h5>Interests</h5>
+          <div class="mb-4">
+            <span class="interest-tag">Hiking</span>
+            <span class="interest-tag">Coffee</span>
+            <span class="interest-tag">Photography</span>
+            <span class="interest-tag">Dogs</span>
+            <span class="interest-tag">Travel</span>
+          </div>
+          <div class="d-flex justify-content-end gap-2">
+            <button class="btn btn-outline-danger" id="profile-pass-btn">
+              <i class="bi bi-x-circle"></i> Pass
+            </button>
+            <button class="btn btn-primary" id="profile-like-btn">
+              <i class="bi bi-heart-fill"></i> Like
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+<!-- Explore -->
+  <section id="explore" class="section container py-5">
+    <h2 class="text-center mb-4">Explore</h2>
+    <p class="text-center mb-5">Discover new people beyond your usual matches.</p>
+
+    <ul class="nav nav-tabs justify-content-center mb-4" id="exploreTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="featured-tab" data-bs-toggle="tab" data-bs-target="#featured" type="button" role="tab" aria-controls="featured" aria-selected="true">Featured</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="new-tab" data-bs-toggle="tab" data-bs-target="#new" type="button" role="tab" aria-controls="new" aria-selected="false">New Nearby</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="interests-tab" data-bs-toggle="tab" data-bs-target="#interests" type="button" role="tab" aria-controls="interests" aria-selected="false">By Interests</button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="exploreTabContent">
+      <div class="tab-pane fade show active" id="featured" role="tabpanel" aria-labelledby="featured-tab">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          <div class="col">
+            <div class="card h-100">
+              <img src="Emma.png" alt="Featured profile of Emma - artist with paintbrush" class="card-img-top" />
+              <div class="card-body">
+                <h5 class="card-title">Emma, 27</h5>
+                <p class="card-text">Artist and art teacher who loves museums and painting landscapes.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="compatibility-badge">82% Match</span>
+                  <button class="btn btn-sm btn-outline-primary">View Profile</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100">
+              <img src="David.png" alt="Featured profile of David - musician playing guitar" class="card-img-top" />
+              <div class="card-body">
+                <h5 class="card-title">David, 30</h5>
+                <p class="card-text">Musician and coffee shop owner. I play guitar and love live music.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="compatibility-badge">78% Match</span>
+                  <button class="btn btn-sm btn-outline-primary">View Profile</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100">
+              <img src="Lisa.png" alt="Featured profile of Lisa - yoga instructor in pose" class="card-img-top" />
+              <div class="card-body">
+                <h5 class="card-title">Lisa, 29</h5>
+                <p class="card-text">Yoga instructor and vegan food lover. Always up for trying new restaurants.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="compatibility-badge">85% Match</span>
+                  <button class="btn btn-sm btn-outline-primary">View Profile</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="new" role="tabpanel" aria-labelledby="new-tab">
+        <p class="text-center text-muted">New nearby profiles will appear here.</p>
+      </div>
+      <div class="tab-pane fade" id="interests" role="tabpanel" aria-labelledby="interests-tab">
+        <p class="text-center text-muted">Profiles filtered by your interests will appear here.</p>
+      </div>
+    </div>
+
+    <div class="text-center mt-5">
+      <button class="btn btn-primary">
+        <i class="bi bi-lightning-charge"></i> Boost My Profile
+      </button>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section id="settings" class="section container py-5">
+    <h2 class="text-center mb-4">Settings & Privacy</h2>
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Account Settings</h4>
+            <div class="list-group mb-4">
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Edit Profile
+                <i class="bi bi-chevron-right"></i>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Notification Preferences
+                <i class="bi bi-chevron-right"></i>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Privacy Settings
+                <i class="bi bi-chevron-right"></i>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Subscription & Payments
+                <i class="bi bi-chevron-right"></i>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Help & Support
+                <i class="bi bi-chevron-right"></i>
+              </a>
+            </div>
+            <h5 class="mt-5 mb-3">Blocked Users</h5>
+            <p class="text-muted">You haven't blocked any users yet.</p>
+            <h5 class="mt-5 mb-3">Report an Issue</h5>
+            <p class="text-muted">If you need to report a user or have encountered any issues, please contact our support team.</p>
+            <button class="btn btn-outline-danger mb-4">Contact Support</button>
+            <div class="text-center">
+              <button class="btn btn-outline-secondary" id="logout-btn">Log Out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+    <!-- Footer -->
+  <footer class="bg-dark text-white py-4">
+    <div class="container text-center">
+      <p>© 2023 LinkUp. All rights reserved.</p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="#" class="text-white">Privacy Policy</a>
+        <a href="#" class="text-white">Terms of Service</a>
+        <a href="#" class="text-white">Contact Us</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Navigation and screen management
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('#nav-links .nav-link');
+    const loginBtn = document.getElementById('login-btn');
+    const showSignupBtn = document.getElementById('show-signup-btn');
+    const signupCol = document.getElementById('signup-col');
+    const preferencesCol = document.getElementById('preferences-col');
+    const signupForm = document.getElementById('signup-form');
+    const preferencesForm = document.getElementById('preferences-form');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    let signedIn = false;
+
+    function showSection(id) {
+      sections.forEach(section => {
+        section.classList.toggle('active', section.id === id);
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.screen === id);
+      });
+    }
+
+    function requireSignIn(screen) {
+      if (!signedIn && screen !== 'onboarding') {
+        alert('Please sign in or create an account first.');
+        showSection('onboarding');
+        return false;
+      }
+      return true;
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = link.dataset.screen;
+        if (requireSignIn(target)) {
+          showSection(target);
+        }
+      });
+    });
+
+    loginBtn.addEventListener('click', () => {
+      signedIn = true;
+      alert('Logged in successfully! Welcome back to LinkUp.');
+      showSection('home');
+    });
+
+    showSignupBtn.addEventListener('click', () => {
+      signupCol.style.display = 'block';
+      preferencesCol.style.display = 'none';
+    });
+
+    signupForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const password = signupForm.password.value;
+      const confirmPassword = signupForm.confirmPassword.value;
+      const terms = signupForm.terms.checked;
+      if (!terms) {
+        alert('Please accept the Terms & Privacy Policy.');
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return;
+      }
+      signedIn = true;
+      alert('Account created successfully! Welcome to LinkUp.');
+      signupCol.style.display = 'none';
+      preferencesCol.style.display = 'block';
+    });
+
+    preferencesForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const checkedInterests = [...preferencesForm.querySelectorAll('.interest-checkbox:checked')];
+      if (checkedInterests.length > 5) {
+        alert('Please select up to 5 interests.');
+        return;
+      }
+      alert('Preferences saved!');
+      showSection('home');
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      signedIn = false;
+      alert('You have been logged out.');
+      showSection('onboarding');
+      signupCol.style.display = 'none';
+      preferencesCol.style.display = 'none';
+    });
+
+    // Update age and distance labels
+    const ageRange = document.getElementById('ageRange');
+    const ageValue = document.getElementById('ageValue');
+    const distance = document.getElementById('distance');
+    const distanceValue = document.getElementById('distanceValue');
+
+    ageRange.addEventListener('input', () => {
+      ageValue.textContent = `18-${ageRange.value}`;
+    });
+    distance.addEventListener('input', () => {
+      distanceValue.textContent = distance.value;
+    });
+
+    // Swipe buttons alerts
+    document.getElementById('like-btn').addEventListener('click', () => alert('You liked Alex!'));
+    document.getElementById('pass-btn').addEventListener('click', () => alert('You passed on Alex.'));
+    document.getElementById('superlike-btn').addEventListener('click', () => alert('You super liked Alex!'));
+    document.getElementById('profile-like-btn').addEventListener('click', () => alert('You liked Alex!'));
+    document.getElementById('profile-pass-btn').addEventListener('click', () => alert('You passed on Alex.'));
+  </script>
+</body>
+</html>
